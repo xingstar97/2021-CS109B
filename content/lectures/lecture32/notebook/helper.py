@@ -11,13 +11,13 @@ def test_policy(env, action, random=0):
         for i in range(100):
 
             # Reset the environment, this will return the initial state
-            c = env.reset()
+            c = env.reset()[0]
 
             # Loop over the maximum number of steps in each episode
             for t in range(10000):
 
                 # Use the step method using the action sequence got from the toptimal policy
-                c, reward, done, info = env.step(action[c])
+                c, reward, done, truncated, info = env.step(action[c])
 
                 # If the reward returned by the environment is 1, then the goal is reached
                 if done:
@@ -46,9 +46,11 @@ def test_policy(env, action, random=0):
 
                 # Use the step method using the action sequence got from the toptimal policy
                 try:
-                    c, reward, done, info = env.step(env.observation_space.sample())
+                    c, reward, done, truncated, info = env.step(env.action_space.sample())
+                    # env.step: Run one timestep of the environment’s dynamics using the agent actions.
+                    # c: An element of the environment’s observation_space as the next observation due to the agent actions. 
                 except:
-                    c, reward, done, info = env.step(0)
+                    c, reward, done, truncated, info = env.step(0)
 
                 # If the reward returned by the environment is 1, then the goal is reached
                 if done:

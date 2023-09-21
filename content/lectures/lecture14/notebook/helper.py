@@ -7,7 +7,7 @@ seed(1)
 tf.random.set_seed(1)
 
 from matplotlib import pyplot as plt
-from keras.preprocessing.image import load_img
+from tensorflow.keras.utils import load_img
 from PIL import Image
 
 
@@ -19,6 +19,7 @@ def plot_history(history, name):
         for i, metric in enumerate(['loss', 'accuracy']):
             ax[i].plot(history.history[metric], label='Train', color='#EFAEA4', linewidth=3)
             ax[i].plot(history.history[f'val_{metric}'], label='Validation', color='#B2D7D0', linewidth=3)
+            # !!!!!!! use f format in dict label
             if metric == 'accuracy':
                 ax[i].axhline(0.5, color='#8d021f', ls='--', label='Trivial accuracy')
                 ax[i].set_ylabel("Accuracy", fontsize=14)

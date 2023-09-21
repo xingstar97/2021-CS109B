@@ -11,7 +11,12 @@ def plot_pool(img, aug_img):
         fig, ax = plt.subplots(1, 3, figsize=(18, 7))
         scale = np.int((aug_img.shape[0] / img.shape[0]) * 100)
         axins = inset_axes(ax[2], width=f"{scale}%", height=f"{scale}%", loc=10)
+        # Add a child inset Axes to this existing Axes.
         mpl.rcParams['text.color'] = 'k'
+        # runtime configuration
+        # refers to the process of customizing the behavior and settings of a software application while it is running, rather than configuring it before starting the program. 
+        # customize various default settings and configurations for your plots. 
+        # The rcParams dictionary contains a collection of key-value pairs, where each key corresponds to a specific configuration parameter, and the value represents the setting you want to apply.
 
         plot_colour = plt.cm.bone
         # Plot with matrices

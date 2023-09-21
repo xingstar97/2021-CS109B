@@ -17,6 +17,8 @@ from tensorflow.keras.applications.mobilenet import preprocess_input
 
 def load_dataset():
 	df = pd.read_csv("cifar.csv")
+	# need to change the paths in the csv file
+	# refer from the notebook file instead of the csv file
 	print(df.shape)
 	generator = ImageDataGenerator(rescale=1. / 255)
 
@@ -25,6 +27,7 @@ def load_dataset():
 		target_size=(32, 32), color_mode='rgb', seed=30,
 		class_mode='categorical', batch_size=50, shuffle=False,
 		save_format='png', subset='training')
+	# Subset of data ("training" or "validation") if validation_split is set in ImageDataGenerator. 
 
 	return data_gen, df
 
@@ -58,6 +61,7 @@ def occlusion(model, img_num=10, patch_size=4):
 
 	# Get the loss of the model with the original image
 	loss = model.evaluate(img.reshape(-1, 32, 32, 3), y_test[num].reshape(-1, 10), verbose=0)
+	# reshape both a and y!!!!!
 
 	# Define a numpy array to store the loss differences
 	loss_map = np.zeros((img.shape[0], img.shape[1]))
@@ -86,9 +90,16 @@ def occlusion(model, img_num=10, patch_size=4):
 	fig, ax = plt.subplots(1, 2, figsize=(15, 15))
 
 	plt.figure(num=None, figsize=(8, 6), dpi=100, facecolor='w', edgecolor='k')
+	# Create a new figure, or activate an existing figure.
+	# num: A unique identifier for the figure.
+	# dpi: The resolution of the figure in dots-per-inch.
+	# facecolor: The background color.
+	
 	ax[0].imshow(img)
 	ax[1].imshow(img, cmap='gray')
 	im = ax[1].imshow(loss_map, cmap='Reds', alpha=0.3)
 	fig.colorbar(im, fraction=0.05)
+	# Fraction of original axes to use for colorbar.
+	# colorbar will be 3% of the plot's width
 	ax[0].set_title("True Label: " + y_true.upper(), fontsize=15)
 	ax[1].set_title("Predicted label with patch size " + str(PATCH_SIZE) + ": " + y_pred.upper(), fontsize=15)

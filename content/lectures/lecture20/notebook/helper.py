@@ -105,6 +105,8 @@ def rnn_cell_backward(dy, gradients, parameters, x, h, h_prev):
     gradients['dbeta2'] += dy
     dh = np.dot(parameters['W'].T, dy) + gradients['dh_next']  # backprop into h
     dhrhw = (1 - h * h) * dh  # backprop through tanh nonlinearity
+    # https://blogs.cuit.columbia.edu/zp2130/derivative_of_tanh_function/
+
     gradients['dbeta1'] += dhrhw
     gradients['dV'] += np.dot(dhrhw, x.T)
     gradients['dU'] += np.dot(dhrhw, h_prev.T)
@@ -149,6 +151,7 @@ def clip(gradients, maxValue):
     for gradient in [dV, dU, dW, dbeta1, dbeta2]:
         # Clip the gradient value if it goes below or above the threshold
         np.clip(gradient, -maxValue, maxValue, out=gradient)
+        # out: The results will be placed in this array. 
 
     # Reinitialize the gradient dictionary
     gradients = {"dU": dU, "dV": dV, "dW": dW, "dbeta1": dbeta1, "dbeta2": dbeta2}
@@ -182,7 +185,7 @@ def rnn(data, ix_to_char, char_to_ix, num_iterations=10001, n_h=50, vocab_size=2
     loss = get_initial_loss(vocab_size, 5)
 
     # Read the dinos.txt file
-    with open("dinos.txt") as f:
+    with open("../data/dinos.txt") as f:
         # Read the lines in the file
         examples = f.readlines()
 
@@ -206,6 +209,7 @@ def rnn(data, ix_to_char, char_to_ix, num_iterations=10001, n_h=50, vocab_size=2
         # For each character in the sample convert to the alphabet to its corresponding interger
         index = j % len(examples)
         X = [None] + [char_to_ix[ch] for ch in examples[index]]
+        # [None]: serve as a placeholder or start-of-sequence marker.
 
         # Add a new line after each output
         Y = X[1:] + [char_to_ix["\n"]]
@@ -222,7 +226,7 @@ def rnn(data, ix_to_char, char_to_ix, num_iterations=10001, n_h=50, vocab_size=2
 def get_weights(num_iterations=1000, random=1):
     if random == 0:
         # Read the dinos.txt file
-        data = open('dinos.txt', 'r').read()
+        data = open('../data/dinos.txt', 'r').read()
 
         # Convert the data to lower case
         data = data.lower()
